@@ -1,0 +1,98 @@
+<!Doctype Html>
+<Html>
+<Head>
+  <style>
+    { margin: 0; padding: 0; }
+
+    html {
+      background: url('img/vending-machine.jpeg') no-repeat center center fixed;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+    }
+    div.main-box {
+      background-color: white;
+      border-radius: 25px;
+      position: absolute;
+      top: 80px;
+      left: 20px;
+      width: 600px;
+      height: 400px;
+      opacity: 0.8;
+      border: 2px solid black;
+    }
+    button {
+      border-radius: 25px;
+    }
+
+    #message table {
+      width: 100%;
+    }
+
+    #message table th {
+      text-align: left;
+      text-decoration: underline;
+    }
+  </style>
+  <Title> Vending Machine  </Title>
+</Head>
+<Body>
+<div class="main-box">
+  <button id="show-item">Available Items</button>
+  <button id="show-currency">Available Currencies</button>
+  <button id="get-item">Get an Item</button>
+  <button id="add-item">Add New Item</button>
+  <div id="message"></div>
+</div>
+</Body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $("#show-item").click(function (e) {
+      $.ajax({
+        type: "GET",
+        url: "http://localhost:8009/itemlist",
+        dataType: "json",
+        success: function (result, status, xhr) {
+          $("#message").html(result);
+          // var table = $("<table><tr><th>Available Items</th></tr>");
+          // table.append("<tr><td>Name:</td><td>" + result["Name"] + "</td></tr>");
+          // table.append("<tr><td>Price:</td><td>" + result["Price"] + "</td></tr>");
+          // table.append("<tr><td>Count:</td><td>" + result["Count"] + "</td></tr>");
+          // $("#message").html(table);
+        },
+        error: function (xhr, status, error) {
+          alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+        }
+      });
+    });
+
+    $("#show-currency").click(function (e) {
+      $.ajax({
+        type: "GET",
+        url: "http://localhost:8009/availablecurrency",
+        dataType: "json",
+        success: function (result, status, xhr) {
+          var table = $("<table><tr><th>Available Currencies</th></tr>");
+          table.append("<tr><td>Label:</td><td>" + result["Label"] + "</td></tr>");
+          table.append("<tr><td>Value:</td><td>" + result["Value"] + "</td></tr>");
+          $("#message").html(table);
+        },
+        error: function (xhr, status, error) {
+          alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+        }
+      });
+    });
+
+    function Validate() {
+      var errorMessage = "";
+      if ($("#citySelect").val() == "Select") {
+        errorMessage += "► Select City";
+      }
+      return errorMessage;
+    }
+  });
+</script>
+</Html>
